@@ -27,17 +27,60 @@
     <title>React App</title>
   </head>
   <body>
+
+    <div class="overlay">
+      <div class="circle"></div>
+    </div>
+    
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
-
+      
       You can add webfonts, meta tags, or analytics to this file.
       The build step will place the bundled scripts into the <body> tag.
+        
+        To begin the development, run `npm start` or `yarn start`.
+        To create a production bundle, use `npm run build` or `yarn build`.
+      -->
+      
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
+    <style>
+      body {
+        position: relative;
+      }
+      .overlay {
+        z-index: -1;
+        top: 0;
+        position: absolute;
+        height: 200px;
+        width: 100%;
+        background: rgb(7, 20, 199, 0.5);
+      }
+      .circle {
+        position: absolute;
+        height: 50px;
+        width: 50px;
+        background: rgba(128,128,128,0.5);
+      }
+    </style>
+    <script>
+
+      // rect.left: 20,   rect.right: 241.75
+      // rect.top:  20,   rect.bottom: 87
+      // width:    221.75
+      // height:    67
+
+
+      // const rect = box.getBoundingClientRect();
+      const overlay = document.querySelector('.overlay');
+      const circle = document.querySelector('.circle');
+      circle.style.top = '20px';
+      circle.style.left = '20px';
+      circle.style.width = '162.5px';
+      circle.style.height = '154px';
+
+    </script>
   </body>
 </html>
