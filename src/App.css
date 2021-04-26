@@ -1,0 +1,10 @@
+:root {
+  --color-background: #000000;
+  --color-surface: #121212;
+  --color-secondary:#1d1d1d;
+  --text-color-1: #999;
+  --button-background-1: #57a818;
+}
+body {
+  background: var(--color-background);  
+}

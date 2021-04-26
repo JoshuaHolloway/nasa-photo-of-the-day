@@ -1,14 +1,16 @@
 import React from 'react';
 import { gsap, timeline } from 'gsap';
 import styled from 'styled-components';
+import './App.css';
 
 const CardContainer = styled.div`
-  /* background: green; */
+  background: var(--color-surface);
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 1fr 1fr 1fr;
 
-  border: solid 2px hotpink;
+  border: solid 2px var(--color-secondary);
+  border-radius: 10px;
 `;
 const Container = styled.div`
   display: flex;

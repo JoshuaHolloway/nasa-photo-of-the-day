@@ -7,16 +7,19 @@ import useFetchData from './api/fetch.js';
 
 const WrapperDiv = styled.div`
 
+  
+  padding: 20px;
   display: grid;
+  gap: 10px;
+  color: var(--text-color-1);
 
   @media screen and (max-width: 700px) {
-    background: blue;
+    
     grid-template-columns: repeat(2, 1fr);
     grid-template-rows: repeat(50, 1fr);
   }
 
   @media screen and (min-width: 701px) {
-    background: yellow;
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(25, 1fr);
   }
