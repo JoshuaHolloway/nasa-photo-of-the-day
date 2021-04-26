@@ -24,22 +24,31 @@ class Card extends React.Component {
     // reference to the DOM node
     this.logoContainer = null;
     // reference to the animation
-    this.logoTween = null;
+    this.timeline = null;
 
     this.datum = props.datum;
 
     this.myRef = React.createRef();
+
+    this.state = {count: 0};
   }
 
   componentDidMount(){
     // use the node ref to create the animation
-    this.logoTween = gsap.timeline({ paused:true }).to(this.logoContainer, {x: 100, y: 100, duration: 1});
+    this.timeline = gsap.timeline({ paused:true }).to(this.logoContainer, {x: 100, y: 100, duration: 1});
   }
 
   render() {
     return (
 
-      <CardContainer onClick={() =>  this.logoTween.play()}>
+      <CardContainer onClick={() => {
+        if (this.state.count === 0)
+          this.timeline.play();
+        else
+          this.timeline.reverse();
+
+        this.state.count = (this.state.count + 1) % 2;
+      }}>
         
         <Container>
           <p ref={div => this.logoContainer = div}>{this.datum.name}</p>
