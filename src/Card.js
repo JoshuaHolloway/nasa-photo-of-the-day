@@ -51,7 +51,23 @@ class Card extends React.Component {
     console.log(`left: ${this.left},  width: ${this.width}`);
 
 
-    const x_shift = screen_center_x - (162.5/2) - 20;
+    const x1 = 20;
+    const width = 162.5;
+    const x0 = this.left + (width/2);
+    
+
+    // [0, 0]
+    //const x_shift = screen_center_x - (width/2) - 20;
+
+    let x_shift;
+    
+    if (screen_center_x > x0)
+      x_shift = screen_center_x - x0;
+    else
+      x_shift = -(x0 - screen_center_x);
+    
+
+
     const y_shift = screen_center_y - (154/2) - 20;
 
 
@@ -60,7 +76,7 @@ class Card extends React.Component {
     this.timeline.to(this.DOM_node_reference, {x: x_shift, y: y_shift, duration: 1});
 
     const screen_width = 375; // iPhone 6/7/8
-    const final_gap = 40;
+    const final_gap = 10;
     const element_width = 162.5;
 
     const scale = (screen_width - 2*final_gap) / (element_width);
