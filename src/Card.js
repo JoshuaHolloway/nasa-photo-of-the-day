@@ -42,20 +42,23 @@ class Card extends React.Component {
   componentDidMount(){
 
     const screen = window.screen;
-    console.log(screen);
+    // console.log(screen);
     
     const screen_center_x = screen.width / 2;
     const screen_center_y = screen.height / 2;
-    console.log(`screen_center_x: ${screen_center_x}, screen_center_y: ${screen_center_y}`);
+    // console.log(`screen_center_x: ${screen_center_x}, screen_center_y: ${screen_center_y}`);
 
-    console.log(`left: ${this.left},  width: ${this.width}`);
-
-
-    const x1 = 20;
-    const width = 162.5;
-    const x0 = this.left + (width/2);
     
-
+    const x1 = this.left;
+    const y1 = this.top;
+    const width = this.width;
+    const height = this.height;
+    const x0 = x1 + (width/2);
+    const y0 = y1 + (height/2);
+    
+    // console.log(`x0: ${x0},  width: ${width}`);
+    
+    
     // [0, 0]
     //const x_shift = screen_center_x - (width/2) - 20;
 
@@ -65,24 +68,30 @@ class Card extends React.Component {
       x_shift = screen_center_x - x0;
     else
       x_shift = -(x0 - screen_center_x);
+
+    let y_shift;
+    if (screen_center_y > y0)
+      y_shift = screen_center_y - y0;
+    else
+      y_shift = -(y0 - screen_center_y);
     
 
 
-    const y_shift = screen_center_y - (154/2) - 20;
+    // const y_shift = screen_center_y - (154/2) - 20;
 
 
     // use the node ref to create the animation
     this.timeline = gsap.timeline({ paused:true });
     this.timeline.to(this.DOM_node_reference, {x: x_shift, y: y_shift, duration: 1});
 
-    const screen_width = 375; // iPhone 6/7/8
-    const final_gap = 10;
-    const element_width = 162.5;
+    const screen_width = screen.width; // iPhone 6/7/8
+    const final_gap = 0;
+    const element_width = width;
 
     const scale = (screen_width - 2*final_gap) / (element_width);
     this.timeline.to(this.DOM_node_reference, {scale: scale});
 
-    const screen_height = 667; // iPhone 6/7/8
+    // const screen_height = 667; // iPhone 6/7/8
     // const expanded_height = screen_height - (2*final_gap + y_shift);
     // const expanded_height = scale * screen_width - 1*final_gap;
     // this.timeline.to(this.DOM_node_reference, {height: expanded_height});

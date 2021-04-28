@@ -25,11 +25,21 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>React App</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.6.1/ScrollTrigger.min.js"></script>
   </head>
   <body>
 
     <div class="overlay">
-      <div class="circle"></div>
+      <div class="quadrant quadrant-1"></div>
+      <div class="quadrant quadrant-2"></div>
+      <div class="quadrant quadrant-3"></div>
+      <div class="quadrant quadrant-4"></div>
+
+      <div class="box box-1"></div>
+      <div class="box box-2"></div>
+      <div class="box box-3"></div>
+      <div class="box box-4"></div>
     </div>
     
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -47,6 +57,9 @@
       
 
     <style>
+      :root {
+        --coordinate-width: 10px;
+      }
       body {
         position: relative;
       }
@@ -54,33 +67,174 @@
         z-index: -1;
         top: 0;
         position: absolute;
-        height: 200px;
-        width: 100%;
-        background: rgb(7, 20, 199, 0.5);
+        height: 100vh;
+        width: 100vw;
+        background: rgba(21, 101, 206, 0.698);
       }
-      .circle {
+      .quadrant, .box {
         position: absolute;
-        height: 50px;
-        width: 50px;
+      }
+      .box {
+        height: 100px;
+        width: 100px;
+      }
+      .box-1 { background: deeppink; }
+      .box-2 { background: darkorange; }
+      .box-3 { background: darkorchid; }
+      .box-4 { background: mediumspringgreen;}
+      .quadrant {
+        height: calc( 50vh - var(--coordinate-width) );
+        width:  calc( 50vw - var(--coordinate-width) );
         background: rgba(128,128,128,0.5);
       }
+      .quadrant-1, .box-1 {
+        top: 0;
+        left: 0;
+      }
+      .quadrant-2, .box-2 {
+        top: 0;
+        right: 0;
+      }
+      .quadrant-3, .box-3 {
+        bottom: 0;
+        right: 0;
+      }
+      .quadrant-4, .box-4 {
+        bottom: 0;
+        left: 0;
+      }
+
     </style>
+
     <script>
 
-      // rect.left: 20,   rect.right: 241.75
-      // rect.top:  20,   rect.bottom: 87
-      // width:    221.75
-      // height:    67
+      // ========================================
+
+      const do_overlay = (() => {
+        const overlay = document.querySelector('.overlay');
+        console.log('overlay: ', overlay);
 
 
-      // const rect = box.getBoundingClientRect();
-      const overlay = document.querySelector('.overlay');
-      const circle = document.querySelector('.circle');
-      circle.style.top = '20px';
-      circle.style.left = '20px';
-      circle.style.width = '162.5px';
-      circle.style.height = '154px';
+        function setTranslate(xPos, yPos, el) {
+            el.style.transform = "translate3d(" + xPos + ", " + yPos + "px, 0)";
+        }
+
+        window.addEventListener("DOMContentLoaded", scrollLoop, false);
+
+        let xScrollPosition;
+        let yScrollPosition;
+
+        function scrollLoop() {
+            xScrollPosition = window.scrollX;
+            yScrollPosition = window.scrollY;
+
+            setTranslate(0, yScrollPosition * 1.0, overlay);
+
+            requestAnimationFrame(scrollLoop);
+        }
+      })();
+
+      // ========================================
+
+      const viewport_geometry = () => {
+
+        const viewport_width = window.innerWidth;
+        const viewport_height = window.innerHeight;
+        const viewport_center_x = viewport_width / 2;
+        const viewport_center_y = viewport_height / 2;
+
+        const document_height1 = document.documentElement.offsetHeight;
+        const document_height2 = document.documentElement.getBoundingClientRect().height;
+        const scroll_offset = window.scrollY;
+
+        // console.log(`scroll_offset: ${scroll_offset}`);
+        // console.log(`document_height1 = ${document_height1},   document_height2 = ${document_height2}`);
+        // console.log(`viewport_height: ${viewport_height}`);
+
+        return {viewport_center_x, viewport_center_y, viewport_width, viewport_height};
+      };
+
+      // ========================================
+
+      const element_geometry = (elem) => {
+
+        const square_geometry = elem.getBoundingClientRect(); 
+        // console.log('square_geometry: ', square_geometry);
+        
+        const w = square_geometry.width;
+        const h = square_geometry.height;
+        const x1 = square_geometry.left;
+        const y1 = square_geometry.top;
+        const x0 = x1 + w/2;
+        const y0 = y1 + h/2;
+
+        // console.log('scrollTop: ', elem.scrollTop);
+        // console.log('offsetTop: ', elem.offsetTop, ',    offsetParent: ', elem.offsetParent);
+        // console.log('offsetParent: ', elem.offsetParent);
+
+        return {x0, y0, x1, y1, w, h};
+      };
+
+      // ========================================
+
+      const get_center_shifts = (viewport_center_x, viewport_center_y, x0, y0) => {
+        let shift_x, shift_y;
+
+        if (viewport_center_x > x0)
+          shift_x = viewport_center_x - x0;
+        else
+          shift_x = -(x0 - viewport_center_x);
+
+        if (viewport_center_y > y0)
+          shift_y = viewport_center_y - y0;
+        else
+          shift_y = -(y0 - viewport_center_y);
+
+        return {shift_x, shift_y};
+      };
+
+      // ========================================
+
+      const do_zoom = (() => {
+        const boxes = gsap.utils.toArray('.box');
+
+        let count = 0;
+        let timeline;
+        document.addEventListener('click', () => {
+
+          const {viewport_center_x, viewport_center_y, viewport_width, viewport_height} = viewport_geometry();
+
+          
+          if (count === 0) {
+            
+            timeline = gsap.timeline();
+            
+            boxes.forEach((box, idx) => {
+              const {x0, y0, w, h} = element_geometry(box);
+              const {shift_x, shift_y} = get_center_shifts(viewport_center_x, viewport_center_y, x0, y0);
+              timeline.to(box, {x: shift_x, y: shift_y}, '<');
+              
+              let s;
+              const final_gap = 50;
+              if (viewport_width < viewport_height) // Scale smaller of two dimensions
+                s = (viewport_width - 2*final_gap) / w;
+              else
+                s = (viewport_height - 2*final_gap) / h;
+            
+              timeline.to(boxes[idx], {scale: s}, '<+0.1');
+            });
+            
+          } 
+          else {
+            timeline.reverse();
+          }
+
+          count = (count + 1) % 2;
+        });
+      })();
+      // ========================================
 
     </script>
+ 
   </body>
 </html>

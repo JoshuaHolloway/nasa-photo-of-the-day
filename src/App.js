@@ -28,7 +28,9 @@ function App() {
   const data = useFetchData();
 
   return (
-    <WrapperDiv>
+    <WrapperDiv onClick={() => {
+      console.log('clicked');
+    }}>
       {data && data.map((datum) => {
         return (
           <Cards datum={datum}/>
