@@ -40,76 +40,91 @@ class Card extends React.Component {
   }
 
   componentDidMount(){
-
-    const screen = window.screen;
-    // console.log(screen);
-    
-    const screen_center_x = screen.width / 2;
-    const screen_center_y = screen.height / 2;
-    // console.log(`screen_center_x: ${screen_center_x}, screen_center_y: ${screen_center_y}`);
-
-    
-    const x1 = this.left;
-    const y1 = this.top;
-    const width = this.width;
-    const height = this.height;
-    const x0 = x1 + (width/2);
-    const y0 = y1 + (height/2);
-    
-    // console.log(`x0: ${x0},  width: ${width}`);
-    
-    
-    // [0, 0]
-    //const x_shift = screen_center_x - (width/2) - 20;
-
-    let x_shift;
-    
-    if (screen_center_x > x0)
-      x_shift = screen_center_x - x0;
-    else
-      x_shift = -(x0 - screen_center_x);
-
-    let y_shift;
-    if (screen_center_y > y0)
-      y_shift = screen_center_y - y0;
-    else
-      y_shift = -(y0 - screen_center_y);
-    
-
-
-    // const y_shift = screen_center_y - (154/2) - 20;
-
-
     // use the node ref to create the animation
-    this.timeline = gsap.timeline({ paused:true });
-    this.timeline.to(this.DOM_node_reference, {x: x_shift, y: y_shift, duration: 1});
-
-    const screen_width = screen.width; // iPhone 6/7/8
-    const final_gap = 0;
-    const element_width = width;
-
-    const scale = (screen_width - 2*final_gap) / (element_width);
-    this.timeline.to(this.DOM_node_reference, {scale: scale});
-
-    // const screen_height = 667; // iPhone 6/7/8
-    // const expanded_height = screen_height - (2*final_gap + y_shift);
-    // const expanded_height = scale * screen_width - 1*final_gap;
-    // this.timeline.to(this.DOM_node_reference, {height: expanded_height});
-
-
-     
+    this.timeline = gsap.timeline({ paused:true });     
   }
 
   render() {
     return (
 
         <CardContainer onClick={() => {
-          if (this.state.count === 0)
+
+          // ========================================
+
+          const viewport_geometry = () => {
+
+            const viewport_width = window.innerWidth;
+            const viewport_height = window.innerHeight;
+            const viewport_center_x = viewport_width / 2;
+            const viewport_center_y = viewport_height / 2;
+
+            const document_height1 = document.documentElement.offsetHeight;
+            const document_height2 = document.documentElement.getBoundingClientRect().height;
+            const scroll_offset = window.scrollY;
+
+            // console.log(`scroll_offset: ${scroll_offset}`);
+            // console.log(`document_height1 = ${document_height1},   document_height2 = ${document_height2}`);
+            // console.log(`viewport_height: ${viewport_height}`);
+
+            return {viewport_center_x, viewport_center_y, viewport_width, viewport_height};
+          };
+
+          // ========================================
+
+          const element_geometry = (elem) => {
+
+            const square_geometry = elem.getBoundingClientRect(); 
+            console.clear();
+            console.log('square_geometry: ', square_geometry);
+            
+            const w = square_geometry.width;
+            const h = square_geometry.height;
+            const x1 = square_geometry.left;
+            const y1 = square_geometry.top;
+            const x0 = x1 + w/2;
+            const y0 = y1 + h/2;
+
+            // console.log('scrollTop: ', elem.scrollTop);
+            // console.log('offsetTop: ', elem.offsetTop, ',    offsetParent: ', elem.offsetParent);
+            // console.log('offsetParent: ', elem.offsetParent);
+
+            return {x0, y0, x1, y1, w, h};
+          };
+
+          // ========================================
+
+          const get_center_shifts = (viewport_center_x, viewport_center_y, x0, y0) => {
+            let shift_x, shift_y;
+
+            if (viewport_center_x > x0)
+              shift_x = viewport_center_x - x0;
+            else
+              shift_x = -(x0 - viewport_center_x);
+
+            if (viewport_center_y > y0)
+              shift_y = viewport_center_y - y0;
+            else
+              shift_y = -(y0 - viewport_center_y);
+
+            return {shift_x, shift_y};
+          };
+
+          // ========================================
+
+          const {viewport_center_x, viewport_center_y, viewport_width, viewport_height} = viewport_geometry();
+          const {x0, y0, w, h} = element_geometry(this.DOM_node_reference);
+          const {shift_x, shift_y} = get_center_shifts(viewport_center_x, viewport_center_y, x0, y0);
+
+
+          if (this.state.count === 0) {
+            this.timeline.to(this.DOM_node_reference, {x: shift_x, y: shift_y}, '<');
             this.timeline.play();
+          }
           else
             this.timeline.reverse();
 
           this.state.count = (this.state.count + 1) % 2;
+
         }} ref={div => this.DOM_node_reference = div}>
           
           <Container>
