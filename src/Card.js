@@ -118,12 +118,16 @@ class Card extends React.Component {
             const {shift_x, shift_y} = get_center_shifts(viewport_center_x, viewport_center_y, x0, y0);
 
             let s;
-            const final_gap = 30;
-            if (viewport_width < viewport_height) // Scale smaller of two dimensions
+            const percent = 15;
+            if (viewport_width < viewport_height) {// Scale smaller of two dimensions
+              const final_gap = (percent/100)*viewport_width;
               s = (viewport_width - 2*final_gap) / w;
-            else
+            }
+            else {
+              const final_gap = (percent/100)*viewport_height;
               s = (viewport_height - 2*final_gap) / h;
-          
+            }
+
             this.timeline.to(this.DOM_node_reference, {x: shift_x, y: shift_y}, '<');
             this.timeline.to(this.DOM_node_reference, {scale: s}, '<+0.1');
             this.timeline.play();
