@@ -1,5 +1,5 @@
 import React from 'react';
-import { gsap, timeline } from 'gsap';
+import { gsap } from 'gsap';
 import styled from 'styled-components';
 import './App.css';
 
@@ -33,10 +33,6 @@ class Card extends React.Component {
     // this.myRef = React.createRef();
     this.state = {count: 0};
 
-    this.left = props.left;
-    this.width = props.width;
-    this.top = props.top;
-    this.height = props.height;
   }
 
   componentDidMount(){
