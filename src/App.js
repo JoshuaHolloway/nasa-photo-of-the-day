@@ -1,6 +1,7 @@
 import React from "react";
 import styled from 'styled-components';
 import './App.css';
+import dummy_data from './api/data.js';
 
 import Cards from './Cards.js';
 import useFetchData from './api/fetch.js';
@@ -82,21 +83,29 @@ const WrapperDiv = styled.div`
   }
 `;
 
-function App() {
+// function App() {
+class App extends React.Component {
 
-  const data = useFetchData();
+  constructor(props) {
+    super(props);
 
-  return (
-    <WrapperDiv onClick={() => {
-      console.log('clicked');
-    }}>
-      {data && data.map((datum) => {
-        return (
-          <Cards datum={datum}/>
-        );
-      })}
-    </WrapperDiv>
-  );
+    // this.data = useFetchData();
+    this.data = dummy_data;
+  }
+
+  render() {
+    return (
+      <WrapperDiv onClick={() => {
+        console.log('clicked');
+      }}>
+        {this.data && this.data.map((datum) => {
+          return (
+            <Cards datum={datum}/>
+          );
+        })}
+      </WrapperDiv>
+    );
+  }
 }
 
 export default App;

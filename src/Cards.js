@@ -1,28 +1,26 @@
 import React from "react";
+import useMeasure from 'react-use-measure';
 import styled from 'styled-components';
 import './App.css';
 import Card from './Card.js';
 
-// const CardWrapper = styled.div`
-//   height: 100%;
-// `;
+const CardWrapper = styled.div`
+  height: 100%;
+`;
 
-// function Cards({datum}) {
-class Cards extends React.Component {
+function Cards({datum}) {
 
-  constructor(props)  {
-    super(props);
+  const [ref, bounds] = useMeasure();
 
-    this.datum = props.datum;
-  } // constructor()
-
-  render () {
-    return (
-    // <CardWrapper >
-        <Card datum={this.datum} />
-    // </CardWrapper>
-    ); // return()
-  } // render()
-} // class Cards {}
+  return (
+    <CardWrapper ref={ref} >
+        {/* {`${bounds.left}, ${window.screen.width/2}`} */}
+        <Card datum={datum} 
+          left={bounds.left} width={bounds.width} 
+          top={bounds.top}   height={bounds.height}
+        />
+    </CardWrapper>
+  );
+}
 
 export default Cards;

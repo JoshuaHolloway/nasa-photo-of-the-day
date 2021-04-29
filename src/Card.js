@@ -32,7 +32,6 @@ class Card extends React.Component {
     this.datum = props.datum;
     // this.myRef = React.createRef();
     this.state = {count: 0};
-
   }
 
   componentDidMount(){
