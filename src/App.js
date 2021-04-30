@@ -2,7 +2,7 @@ import React from "react";
 import styled from 'styled-components';
 import './App.css';
 
-import Cards from './Cards.js';
+import Card from './Card.js';
 import useFetchData from './api/fetch.js';
 
 const WrapperDiv = styled.div`
@@ -92,7 +92,7 @@ function App() {
     }}>
       {data && data.map((datum) => {
         return (
-          <Cards datum={datum}/>
+          <Card datum={datum}/>
         );
       })}
     </WrapperDiv>
