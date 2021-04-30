@@ -4,7 +4,12 @@ import './App.css';
 import dummy_data from './api/data.js';
 
 import Cards from './Cards.js';
-import useFetchData from './api/fetch.js';
+// import useFetchData from './api/fetch.js';
+
+import { gsap } from "gsap";
+import { Flip } from "gsap/Flip";
+
+gsap.registerPlugin(Flip);
 
 const WrapperDiv = styled.div`
   padding: 20px;
@@ -91,14 +96,29 @@ class App extends React.Component {
 
     // this.data = useFetchData();
     this.data = dummy_data;
+
+    // reference to the DOM node
+    this.DOM_node_reference = null;
+
+    // array to store the cards in
+    this.array = [];
   }
 
   render() {
     return (
-      <WrapperDiv onClick={() => {
-        console.log('clicked');
-      }}>
+      <WrapperDiv 
+        onClick={() => {
+          console.log('clicked');
+          console.log('this.array: ', this.array);
+
+        }}
+        ref={div => this.DOM_node_reference = div}
+      >
         {this.data && this.data.map((datum) => {
+
+          // push cards onto array
+          this.array.push(<Cards/>);
+
           return (
             <Cards datum={datum}/>
           );
